@@ -17,15 +17,23 @@ public class EchoClient {
 		Socket socket = new Socket("localhost", PORT_NUMBER);
 		InputStream socketInputStream = socket.getInputStream();
 		OutputStream socketOutputStream = socket.getOutputStream();
- 		WriteToServer write = new WriteToServer(socketOutputStream);
+ 		
+		WriteToServer write = new WriteToServer(socketOutputStream);
+		Reader read = new Reader(socketInputStream, socket);
+
+		Thread writer = new Thread(write);
+		Thread reader = new Thread(read);
+
+		writer.start();
+		reader.start();
 		// Put your code here.
 	}
-}
-public class WriteToServer{
 
+public class WriteToServer implements Runnable{
+  OutputStream os;	
   // Constructor
-  public WriteToServer(OutoutStream os){
-	this.os = os;
+  public WriteToServer(OutputStream os){
+    this.os = os;
   }
   public void run(){
     try{
@@ -41,26 +49,29 @@ public class WriteToServer{
     }
   }
 }// end Writer class
-public class Reader{
-  public Reader(InputStream is, OutputStream os, Socket s){
+public class Reader implements Runnable{
+  Socket s;
+  InputStream is;
+  public Reader(InputStream is, Socket s){
     this.is = is;
-    this.os = os; 
     this.s = s;
   }
   public void run(){
-  while(true){
-    try{
-    // read single byte from socket
-    
-    // Write these bytes to stdin
-
-    }catch{
-
-
-    }
-
-
-
-  }
+   while(true){
+     try{
+     // read single byte from socket
+     int inputbyte;
+     while((inputbyte = is.read()) != -1){
+        System.out.write(is.read());
+        System.out.flush();
+     }
+     is.close();
+     s.close();
+     }catch(IOException ioe){
+        System.out.println("We caught an unexected exeption");
+     }
+   }
   }
 }// end reader class
+
+}
