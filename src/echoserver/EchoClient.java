@@ -18,7 +18,7 @@ public class EchoClient {
 		InputStream socketInputStream = socket.getInputStream();
 		OutputStream socketOutputStream = socket.getOutputStream();
  		
-		WriteToServer write = new WriteToServer(socketOutputStream);
+		WriteToServer write = new WriteToServer(socketOutputStream, socket);
 		Reader read = new Reader(socketInputStream, socket);
 
 		Thread writer = new Thread(write);
@@ -30,10 +30,12 @@ public class EchoClient {
 	}
 
 public class WriteToServer implements Runnable{
-  OutputStream os;	
+  OutputStream os;
+  Socket s;  
   // Constructor
-  public WriteToServer(OutputStream os){
+  public WriteToServer(OutputStream os ,Socket s){
     this.os = os;
+    this.s = s;
   }
   public void run(){
     try{
@@ -41,10 +43,10 @@ public class WriteToServer implements Runnable{
     while((inputbyte = System.in.read())!= -1){
 	// Write that byte to socket
 	os.write(inputbyte);
-        os.flush();
+        
     }
-    os.shutdownOutput();
-    }catch(IOExceotion ioe){
+    s.shutdownOutput();
+    }catch(IOException ioe){
        System.out.println("we caught an unexpected exception");
     }
   }
@@ -57,20 +59,18 @@ public class Reader implements Runnable{
     this.s = s;
   }
   public void run(){
-   while(true){
      try{
      // read single byte from socket
      int inputbyte;
      while((inputbyte = is.read()) != -1){
         System.out.write(is.read());
-        System.out.flush();
+        
      }
-     is.close();
-     s.close();
+     System.out.flush();
+     s.shutdownInput();
      }catch(IOException ioe){
         System.out.println("We caught an unexected exeption");
      }
-   }
   }
 }// end reader class
 
