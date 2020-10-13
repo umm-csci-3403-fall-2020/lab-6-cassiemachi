@@ -20,12 +20,12 @@ public class EchoClient {
  		
 		WriteToServer write = new WriteToServer(socketOutputStream, socket);
 		Reader read = new Reader(socketInputStream, socket);
-
-		Thread writer = new Thread(write);
+		
 		Thread reader = new Thread(read);
+		Thread writer = new Thread(write);	
 
-		writer.start();
 		reader.start();
+		writer.start();
 		// Put your code here.
 	}
 
@@ -63,7 +63,7 @@ public class Reader implements Runnable{
      // read single byte from socket
      int inputbyte;
      while((inputbyte = is.read()) != -1){
-        System.out.write(is.read());
+        System.out.write(inputbyte);
         
      }
      System.out.flush();
