@@ -17,52 +17,42 @@ public class EchoClient {
 		Socket socket = new Socket("localhost", PORT_NUMBER);
 		InputStream socketInputStream = socket.getInputStream();
 		OutputStream socketOutputStream = socket.getOutputStream();
-
+ 		WriteToServer write = new WriteToServer(socketOutputStream);
 		// Put your code here.
 	}
 }
-public class Writer{
+public class WriteToServer{
 
   // Constructor
-  public Writer(Socket s, InputStream is, OutoutStream os ){
-	this.s =s;
-	this.is = is
-	this.os = os
+  public WriteToServer(OutoutStream os){
+	this.os = os;
   }
   public void run(){
-    String recieved;
-    String toWrite;
-    while(true){
-	try{
-	    
-	 // Read a byte from the socket  
-	
-
-	// Write that byte to standard output
-
-
-
-	}
-
-
+    try{
+    int inputbyte;
+    while((inputbyte = System.in.read())!= -1){
+	// Write that byte to socket
+	os.write(inputbyte);
+        os.flush();
     }
-
-
+    os.shutdownOutput();
+    }catch(IOExceotion ioe){
+       System.out.println("we caught an unexpected exception");
+    }
   }
-  
 }// end Writer class
 public class Reader{
   public Reader(InputStream is, OutputStream os, Socket s){
-    this.is = is
+    this.is = is;
     this.os = os; 
     this.s = s;
   }
   public void run(){
   while(true){
     try{
-    // read single byte from stdin
+    // read single byte from socket
     
-    // Write these bytes to the socket
+    // Write these bytes to stdin
 
     }catch{
 
