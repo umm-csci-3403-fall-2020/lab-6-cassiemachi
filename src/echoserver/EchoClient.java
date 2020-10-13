@@ -50,10 +50,27 @@ public class Writer{
 
   }
   
-
-	
-
-
-
-
 }// end Writer class
+public class Reader{
+  public Reader(InputStream is, OutputStream os, Socket s){
+    this.is = is
+    this.os = os; 
+    this.s = s;
+  }
+  public void run(){
+  while(true){
+    try{
+    // read single byte from stdin
+    
+    // Write these bytes to the socket
+
+    }catch{
+
+
+    }
+
+
+
+  }
+  }
+}// end reader class
