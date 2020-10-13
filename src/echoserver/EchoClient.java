@@ -21,3 +21,39 @@ public class EchoClient {
 		// Put your code here.
 	}
 }
+public class Writer{
+
+  // Constructor
+  public Writer(Socket s, InputStream is, OutoutStream os ){
+	this.s =s;
+	this.is = is
+	this.os = os
+  }
+  public void run(){
+    String recieved;
+    String toWrite;
+    while(true){
+	try{
+	    
+	 // Read a byte from the socket  
+	
+
+	// Write that byte to standard output
+
+
+
+	}
+
+
+    }
+
+
+  }
+  
+
+	
+
+
+
+
+}// end Writer class
