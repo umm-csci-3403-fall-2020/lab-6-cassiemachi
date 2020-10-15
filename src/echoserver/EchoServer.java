@@ -5,7 +5,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
-
+import java.util.*;
 public class EchoServer {
 	
 	// REPLACE WITH PORT PROVIDED BY THE INSTRUCTOR
@@ -17,21 +17,34 @@ public class EchoServer {
 
 	private void start() throws IOException, InterruptedException {
 		ServerSocket serverSocket = new ServerSocket(PORT_NUMBER);
+		//ExecutorService executor = Executor.newCachedThreadPool();
+		//ThreadPoolExecutor butler = (ThreadPoolExecutor) executor;
 		while (true) {
 			Socket socket = serverSocket.accept();
                         
-			// Put your code here.
-			// This should do very little, essentially:
-			//   * Construct an instance of your runnable class
-			//   * Construct a Thread with your runnable
-			//      * Or use a thread pool
-			//   * Start that thread
+			InputStream socketInputStream = socket.getInputStream();
+			OutputStream socketOutputStream = socket.getOutputStream();
+
+			HandleClient butler = new HandleClient(socket, socketOutputStream, socketInputStream);
+
+			Thread buttThread = new Thread(butler);
+
+			buttThread.start();
+
+			//executor.submit(butler);
+		        
 		}
+		//executor.shutdown();
 	}
+	//public class ThreadFactory() implements ThreadFactory{
+	//  public Thread newThread(Runnable r){
+	//    return new Thread(r)
+	//  }
+	//}// end Thread Factory
 	public class HandleClient implements Runnable{
 	  Socket s;
-	  outputStream os;
-	  inputStream is;
+	  OutputStream os;
+	  InputStream is;
 	  // Constructor
 	  public HandleClient(Socket s, OutputStream os, InputStream is){
 	     this.s = s;
