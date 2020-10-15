@@ -9,7 +9,7 @@ import java.net.Socket;
 public class EchoServer {
 	
 	// REPLACE WITH PORT PROVIDED BY THE INSTRUCTOR
-	public static final int PORT_NUMBER = 0; 
+	public static final int PORT_NUMBER = 6013; 
 	public static void main(String[] args) throws IOException, InterruptedException {
 		EchoServer server = new EchoServer();
 		server.start();
@@ -19,7 +19,7 @@ public class EchoServer {
 		ServerSocket serverSocket = new ServerSocket(PORT_NUMBER);
 		while (true) {
 			Socket socket = serverSocket.accept();
-
+                        
 			// Put your code here.
 			// This should do very little, essentially:
 			//   * Construct an instance of your runnable class
@@ -28,4 +28,31 @@ public class EchoServer {
 			//   * Start that thread
 		}
 	}
+	public class HandleClient implements Runnable{
+	  Socket s;
+	  outputStream os;
+	  inputStream is;
+	  // Constructor
+	  public HandleClient(Socket s, OutputStream os, InputStream is){
+	     this.s = s;
+	     this.os = os;
+	     this.is =is;
+	  }
+	  public void run(){
+	    try{
+	    int inputbyte;
+	    while((inputbyte = is.read()) != -1){
+	      os.write(inputbyte);	    
+	    
+	    }
+	    s.shutdownOutput();   	    
+	    s.shutdownInput();
+	    }catch(IOException ioe){
+	      System.out.println("we caught an unexpected exception");	    
+	    
+	    }
+	  }
+	
+	
+	}//end HandlClients class
 }
