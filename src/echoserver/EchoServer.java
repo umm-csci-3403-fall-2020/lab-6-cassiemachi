@@ -5,7 +5,10 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.*;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 public class EchoServer {
 	
 	// REPLACE WITH PORT PROVIDED BY THE INSTRUCTOR
@@ -17,30 +20,24 @@ public class EchoServer {
 
 	private void start() throws IOException, InterruptedException {
 		ServerSocket serverSocket = new ServerSocket(PORT_NUMBER);
-		//ExecutorService executor = Executor.newCachedThreadPool();
-		//ThreadPoolExecutor butler = (ThreadPoolExecutor) executor;
+		ExecutorService executor = Executors.newCachedThreadPool();
+		ThreadPoolExecutor butler = (ThreadPoolExecutor) executor;
 		while (true) {
 			Socket socket = serverSocket.accept();
                         
 			InputStream socketInputStream = socket.getInputStream();
 			OutputStream socketOutputStream = socket.getOutputStream();
 
-			HandleClient butler = new HandleClient(socket, socketOutputStream, socketInputStream);
+			//HandleClient butler = new HandleClient(socket, socketOutputStream, socketInputStream);
 
-			Thread buttThread = new Thread(butler);
+			//Thread buttThread = new Thread(butler);
+			//buttThread.start();
 
-			buttThread.start();
-
-			//executor.submit(butler);
-		        
+			executor.submit(new HandleClient(socket, socketOutputStream, socketInputStream));
+		        executor.shutdown();
 		}
 		//executor.shutdown();
 	}
-	//public class ThreadFactory() implements ThreadFactory{
-	//  public Thread newThread(Runnable r){
-	//    return new Thread(r)
-	//  }
-	//}// end Thread Factory
 	public class HandleClient implements Runnable{
 	  Socket s;
 	  OutputStream os;
