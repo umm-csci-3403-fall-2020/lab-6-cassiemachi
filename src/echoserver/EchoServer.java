@@ -28,15 +28,10 @@ public class EchoServer {
 			InputStream socketInputStream = socket.getInputStream();
 			OutputStream socketOutputStream = socket.getOutputStream();
 
-			//HandleClient butler = new HandleClient(socket, socketOutputStream, socketInputStream);
-
-			//Thread buttThread = new Thread(butler);
-			//buttThread.start();
-
 			executor.submit(new HandleClient(socket, socketOutputStream, socketInputStream));
 		        executor.shutdown();
 		}
-		//executor.shutdown();
+	
 	}
 	public class HandleClient implements Runnable{
 	  Socket s;
